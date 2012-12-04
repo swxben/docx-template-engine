@@ -29,17 +29,22 @@ In code:
 
 	Brought to you by SWXBEN!
 
+A very simple use case is given in the `docxtemplateenginetest` project, which is a command line application that takes an input filename,
+an output filename, and a JSON string.
+
 
 ## Limitations
 
-The templating language in the first milestone is a simple search and replace using the value `.ToString()`. No escaping of the template sequence, loops, formatting in document etc.
+The templating language in the first milestone is a simple search and replace using the value `.ToString()`. No escaping of the 
+template sequence, loops, formatting in document etc. The template _probably_ won't be recognised if there is any formatting within
+the template string such as an errant bold character like {{th**i**s}}.
 
 
 ## Roadmap
 
 ### First milestone
 
-- Simple search and replace given in the first example.
+- Simple search and replace as given in the first example.
 
 ### Second milestone
 
@@ -48,6 +53,7 @@ The templating language in the first milestone is a simple search and replace us
 ### Third milestone
 
 - Escaping in the templating language
+- Nested objects, eg `{{Address.Line1}} {{Address.Line2}}`
 - Formatting in the template, eg `{{DateOfBirth.ToString("dd-MM-yyyy")}}`
 
 ### Fourth milestone
@@ -67,3 +73,6 @@ All files [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/) unless 
 ### Third party licenses
 
 Third party libraries or resources have been included in this project under their respective licenses.
+
+- The example project uses [JSON.NET](http://json.codeplex.com/) which uses the [MIT License and is &copy; James Newton-King](http://json.codeplex.com/license).
+

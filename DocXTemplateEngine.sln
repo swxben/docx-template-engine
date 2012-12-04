@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A47A94
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "docxtemplateenginetest", "src\docxtemplateenginetest\docxtemplateenginetest.csproj", "{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,16 @@ Global
 		{55CA6250-4469-43F9-BA9E-C4E42F8959F5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{55CA6250-4469-43F9-BA9E-C4E42F8959F5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{55CA6250-4469-43F9-BA9E-C4E42F8959F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Debug|x86.ActiveCfg = Debug|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Debug|x86.Build.0 = Debug|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Release|Any CPU.ActiveCfg = Release|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Release|Mixed Platforms.Build.0 = Release|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Release|x86.ActiveCfg = Release|x86
+		{6CC9B1B0-FF5E-48F3-B4E8-B0BDA46868CE}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
