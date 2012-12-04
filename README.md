@@ -12,6 +12,7 @@ At the moment there isn't a reasonable install or upgrade path. Maybe a NuGet pa
 ## Usage
 
 In `template.docx`:
+
 	Brought to you by {{Name}}!
 
 In code:
@@ -25,6 +26,7 @@ In code:
 		});
 
 `dest.docx` is created:
+
 	Brought to you by SWXBEN!
 
 
@@ -46,7 +48,7 @@ The templating language in the first milestone is a simple search and replace us
 ### Third milestone
 
 - Escaping in the templating language
-- Formatting in the template, eg `{{DateOfBirth.ToString("dd-MM-yyyy")}}
+- Formatting in the template, eg `{{DateOfBirth.ToString("dd-MM-yyyy")}}`
 
 ### Fourth milestone
 
