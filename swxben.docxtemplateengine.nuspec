@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>swxben.docxtemplateengine</id>
+    <version>0.1.0</version>
+    <title>DocXTemplateEngine</title>
+    <authors>Ben Scott</authors>
+    <owners>Ben Scott</owners>
+    <licenseUrl>http://creativecommons.org/licenses/by-sa/3.0/</licenseUrl>
+    <projectUrl>https://github.com/swxben/docx-template-engine</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A template engine for the .NET platform which takes a DOCX file and applies a data object to generate reports, do mail merges, etc. No dependency on MS Word.</description>
+    <summary>A template engine for the .NET platform which takes a DOCX file and applies a data object to generate reports, do mail merges, etc. No dependency on MS Word.</summary>
+    <releaseNotes></releaseNotes>
+    <tags>Word, MS Word, Template</tags>
+    <dependencies>
+      <dependency id="SharpZipLib" version="0.86.0"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="src\swxben.docxtemplateengine\bin\Release\swxben.docxtemplateengine.dll" target="lib\net40\swxben.docxtemplateengine.dll" />
+  </files>
+</package>
