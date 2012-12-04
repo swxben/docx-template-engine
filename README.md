@@ -11,9 +11,9 @@ At the moment there isn't a reasonable install or upgrade path. Maybe a NuGet pa
 
 ## Usage
 
-In `template.docx`:
+In `template.docx` - use a field (Insert / Quick Parts / Field), _Field type_ is `MergeField` and enter the field or property name in _Field_:
 
-	Brought to you by {{Name}}!
+	Brought to you by &laquo;Name&raquo;!
 
 In code:
 
@@ -25,12 +25,16 @@ In code:
 			Name = "SWXBEN"
 		});
 
+`data` can be just about any data type. Fields and properties are iterated, and if it can be cast to `IDictionary<object, string>` (such as a dynamic `ExpandoObject`) the dictionary entries are iterated.
+
 `dest.docx` is created:
 
 	Brought to you by SWXBEN!
 
 A very simple use case is given in the `docxtemplateenginetest` project, which is a command line application that takes an input filename,
-an output filename, and a JSON string.
+an output filename, and a JSON string. Eg:
+
+	docxtemplateenginetest.exe template.docx output.docx "{ Name: 'Ben', Website: 'swxben.com' }"
 
 
 ## Limitations
@@ -45,6 +49,8 @@ the template string such as an errant bold character like {{th**i**s}}.
 ### First milestone
 
 - Simple search and replace as given in the first example.
+- Originally I wanted plain text templates such as `[[Name]]` or `{{Name}}` but Word likes to insert runs for things like grammar warnings, so
+sticking to merge fields for now
 
 ### Second milestone
 
@@ -74,5 +80,6 @@ All files [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/) unless 
 
 Third party libraries or resources have been included in this project under their respective licenses.
 
+- The engine uses SharpZipLib [1](http://www.icsharpcode.net/opensource/sharpziplib/) [2](https://github.com/icsharpcode/SharpZipLib) which is GPL with an exception meaning it can be used in commercial closed-source applications.
 - The example project uses [JSON.NET](http://json.codeplex.com/) which uses the [MIT License and is &copy; James Newton-King](http://json.codeplex.com/license).
 

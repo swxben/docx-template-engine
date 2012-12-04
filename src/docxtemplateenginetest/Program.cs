@@ -2,6 +2,9 @@
 using System.Linq;
 using Newtonsoft.Json;
 using swxben.docxtemplateengine;
+using Newtonsoft.Json.Linq;
+using System.Dynamic;
+using System.Collections.Generic;
 
 namespace docxtemplateenginetest
 {
@@ -22,11 +25,7 @@ namespace docxtemplateenginetest
             var destination = args[1];
             var json = args[2];
 
-            Console.WriteLine();
-            Console.WriteLine("Data:");
-            var data = JsonConvert.DeserializeObject(json);
-            Console.WriteLine(data.ToString());
-            Console.WriteLine();
+            var data = JsonToDynamic((JToken)JsonConvert.DeserializeObject(json));
 
             var templateEngine = new DocXTemplateEngine();
 
@@ -36,6 +35,33 @@ namespace docxtemplateenginetest
 
             Console.WriteLine("Complete");
             Console.WriteLine();
+        }
+
+        static dynamic JsonToDynamic(JToken token)
+        {
+            if (token is JValue) return ((JValue)token).Value;
+
+            if (token is JObject)
+            {
+                var expando = new ExpandoObject();
+                foreach (var childToken in token.OfType<JProperty>())
+                {
+                    ((IDictionary<string, object>)expando).Add(childToken.Name, JsonToDynamic(childToken.Value));
+                }
+                return expando;
+            }
+
+            if (token is JArray)
+            {
+                var items = new List<ExpandoObject>();
+                foreach (var arrayItem in ((JArray)token))
+                {
+                    items.Add(JsonToDynamic(arrayItem));
+                }
+                return items;
+            }
+
+            throw new ArgumentException(string.Format("Unknown token type {0}", token.GetType()), "token");
         }
     }
 }
