@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace swxben.docxtemplateengine
 {
@@ -32,7 +34,7 @@ namespace swxben.docxtemplateengine
                 if (entry == null) throw new Exception(string.Format("Can't find {0} in template zip", DOCUMENT_XML_PATH));
 
                 using (var s = zipFile.GetInputStream(entry))
-                using (var reader = new StreamReader(s))
+                using (var reader = new StreamReader(s, Encoding.UTF8))
                 {
                     document = reader.ReadToEnd();
                 }
@@ -48,16 +50,23 @@ namespace swxben.docxtemplateengine
 
         public class StringStaticDataSource : IStaticDataSource
         {
-            Stream _stream;
+            string _source;
 
             public StringStaticDataSource(string source)
             {
-                _stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(source));
+                _source = source
+                    .Replace("–", "-")
+                    .Replace("«", "*")
+                    .Replace("»", "*")
+                    .Replace("“", "\"")
+                    .Replace("”", "\"")
+                    .Replace("‘", "'")
+                    .Replace("’", "'");
             }
 
             public Stream GetSource()
             {
-                return _stream;
+                return new MemoryStream(UTF8Encoding.Default.GetBytes(_source));
             }
         }
 
