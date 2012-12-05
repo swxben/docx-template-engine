@@ -12,7 +12,7 @@
     <description>A template engine for the .NET platform which takes a DOCX file and applies a data object to generate reports, do mail merges, etc. No dependency on MS Word.</description>
     <summary>A template engine for the .NET platform which takes a DOCX file and applies a data object to generate reports, do mail merges, etc. No dependency on MS Word.</summary>
     <releaseNotes>Workaround for UTF8 encoded characters such as 'smart quotes'</releaseNotes>
-    <tags>Word, MS Word, Template</tags>
+    <tags>word msword template docx</tags>
     <dependencies>
       <dependency id="SharpZipLib" version="0.86.0"/>
     </dependencies>
