@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>swxben.docxtemplateengine</id>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <title>DocXTemplateEngine</title>
     <authors>Ben Scott</authors>
     <owners>Ben Scott</owners>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A template engine for the .NET platform which takes a DOCX file and applies a data object to generate reports, do mail merges, etc. No dependency on MS Word.</description>
     <summary>A template engine for the .NET platform which takes a DOCX file and applies a data object to generate reports, do mail merges, etc. No dependency on MS Word.</summary>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>Workaround for UTF8 encoded characters such as 'smart quotes'</releaseNotes>
     <tags>Word, MS Word, Template</tags>
     <dependencies>
       <dependency id="SharpZipLib" version="0.86.0"/>
