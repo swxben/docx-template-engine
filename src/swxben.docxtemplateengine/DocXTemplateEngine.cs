@@ -62,7 +62,7 @@ namespace swxben.docxtemplateengine
 
 			var newDocument = ParseTemplate( document, data );
 
-			zipFile.Add( new StringStaticDataSource( newDocument ), DOCUMENT_XML_PATH );
+			zipFile.Add( new StringStaticDataSource( newDocument ), DOCUMENT_XML_PATH, CompressionMethod.Deflated, true );
 
 			zipFile.CommitUpdate();
 		
@@ -86,7 +86,7 @@ namespace swxben.docxtemplateengine
 
             public Stream GetSource()
             {
-                return new MemoryStream(UTF8Encoding.Default.GetBytes(_source));
+                return new MemoryStream(Encoding.UTF8.GetBytes(_source));
             }
         }
 
