@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace swxben.docxtemplateengine
 {
     public interface IDocXTemplateEngine
     {
         void Process(string source, string destination, object data);
-		void Process(string source, Stream destination, object data);
+        void Process(string source, Stream destination, object data);
     }
 
     public class DocXTemplateEngine : IDocXTemplateEngine
@@ -20,52 +18,52 @@ namespace swxben.docxtemplateengine
         public const string TOKEN_START = "«";
         public const string TOKEN_END = "»";
 
-		public void Process(string source, Stream destination, object data)
-		{
-			var sourceData = File.ReadAllBytes( source );
-			destination.Write( sourceData, 0, sourceData.Length );
-			destination.Seek( 0, SeekOrigin.Begin );
-			using (var zipFile = new ZipFile( destination ))
-			{
-				ProcessZip( data, zipFile );
-			}
-		}
+        public void Process(string source, Stream destination, object data)
+        {
+            var sourceData = File.ReadAllBytes(source);
+            destination.Write(sourceData, 0, sourceData.Length);
+            destination.Seek(0, SeekOrigin.Begin);
+            using (var zipFile = new ZipFile(destination))
+            {
+                ProcessZip(data, zipFile);
+            }
+        }
 
-		public void Process(string source, string destination, object data)
-		{
-			if (File.Exists( destination )) File.Delete( destination );
+        public void Process(string source, string destination, object data)
+        {
+            if (File.Exists(destination)) File.Delete(destination);
 
-			File.Copy( source, destination );
+            File.Copy(source, destination);
 
-			using (var zipFile = new ZipFile( destination ))
-			{
-				ProcessZip( data, zipFile );
-			}
-		}
+            using (var zipFile = new ZipFile(destination))
+            {
+                ProcessZip(data, zipFile);
+            }
+        }
 
-		private static void ProcessZip(object data, ZipFile zipFile)
-		{
-			zipFile.BeginUpdate();
+        private static void ProcessZip(object data, ZipFile zipFile)
+        {
+            zipFile.BeginUpdate();
 
-			var document = "";
-			var entry = zipFile.GetEntry( DOCUMENT_XML_PATH );
-			if (entry == null)
-			{
-				throw new Exception( string.Format( "Can't find {0} in template zip", DOCUMENT_XML_PATH ) );
-			}
+            var document = "";
+            var entry = zipFile.GetEntry(DOCUMENT_XML_PATH);
+            if (entry == null)
+            {
+                throw new Exception(string.Format("Can't find {0} in template zip", DOCUMENT_XML_PATH));
+            }
 
-			using (var s = zipFile.GetInputStream( entry ))
-			using (var reader = new StreamReader( s, Encoding.UTF8 ))
-			{
-				document = reader.ReadToEnd();
-			}
+            using (var s = zipFile.GetInputStream(entry))
+            using (var reader = new StreamReader(s, Encoding.UTF8))
+            {
+                document = reader.ReadToEnd();
+            }
 
-			var newDocument = ParseTemplate( document, data );
+            var newDocument = ParseTemplate(document, data);
 
-			zipFile.Add( new StringStaticDataSource( newDocument ), DOCUMENT_XML_PATH, CompressionMethod.Deflated, true );
+            zipFile.Add(new StringStaticDataSource(newDocument), DOCUMENT_XML_PATH, CompressionMethod.Deflated, true);
 
-			zipFile.CommitUpdate();
-		
+            zipFile.CommitUpdate();
+
         }
 
         public class StringStaticDataSource : IStaticDataSource
@@ -74,14 +72,7 @@ namespace swxben.docxtemplateengine
 
             public StringStaticDataSource(string source)
             {
-                _source = source
-                    .Replace("–", "-")
-                    .Replace("«", "*")
-                    .Replace("»", "*")
-                    .Replace("“", "\"")
-                    .Replace("”", "\"")
-                    .Replace("‘", "'")
-                    .Replace("’", "'");
+                _source = source;
             }
 
             public Stream GetSource()
