@@ -11,6 +11,7 @@ namespace swxben.docxtemplateengine
     public interface IDocXTemplateEngine
     {
         void Process(string source, string destination, object data);
+		void Process(string source, Stream destination, object data);
     }
 
     public class DocXTemplateEngine : IDocXTemplateEngine
@@ -19,33 +20,52 @@ namespace swxben.docxtemplateengine
         public const string TOKEN_START = "«";
         public const string TOKEN_END = "»";
 
-        public void Process(string source, string destination, object data)
-        {
-            if (File.Exists(destination)) File.Delete(destination);
+		public void Process(string source, Stream destination, object data)
+		{
+			var sourceData = File.ReadAllBytes( source );
+			destination.Write( sourceData, 0, sourceData.Length );
+			destination.Seek( 0, SeekOrigin.Begin );
+			using (var zipFile = new ZipFile( destination ))
+			{
+				ProcessZip( data, zipFile );
+			}
+		}
 
-            File.Copy(source, destination);
+		public void Process(string source, string destination, object data)
+		{
+			if (File.Exists( destination )) File.Delete( destination );
 
-            using (var zipFile = new ZipFile(destination))
-            {
-                zipFile.BeginUpdate();
+			File.Copy( source, destination );
 
-                var document = "";
-                var entry = zipFile.GetEntry(DOCUMENT_XML_PATH);
-                if (entry == null) throw new Exception(string.Format("Can't find {0} in template zip", DOCUMENT_XML_PATH));
+			using (var zipFile = new ZipFile( destination ))
+			{
+				ProcessZip( data, zipFile );
+			}
+		}
 
-                using (var s = zipFile.GetInputStream(entry))
-                using (var reader = new StreamReader(s, Encoding.UTF8))
-                {
-                    document = reader.ReadToEnd();
-                }
+		private static void ProcessZip(object data, ZipFile zipFile)
+		{
+			zipFile.BeginUpdate();
 
-                var newDocument = ParseTemplate(document, data);
+			var document = "";
+			var entry = zipFile.GetEntry( DOCUMENT_XML_PATH );
+			if (entry == null)
+			{
+				throw new Exception( string.Format( "Can't find {0} in template zip", DOCUMENT_XML_PATH ) );
+			}
 
-                zipFile.Add(new StringStaticDataSource(newDocument), DOCUMENT_XML_PATH);
+			using (var s = zipFile.GetInputStream( entry ))
+			using (var reader = new StreamReader( s, Encoding.UTF8 ))
+			{
+				document = reader.ReadToEnd();
+			}
 
-                zipFile.CommitUpdate();
-                zipFile.Close();
-            }
+			var newDocument = ParseTemplate( document, data );
+
+			zipFile.Add( new StringStaticDataSource( newDocument ), DOCUMENT_XML_PATH );
+
+			zipFile.CommitUpdate();
+		
         }
 
         public class StringStaticDataSource : IStaticDataSource
