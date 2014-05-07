@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 
@@ -41,6 +42,16 @@ namespace swxben.docxtemplateengine
             }
         }
 
+
+        public void Process(Stream sourceStream, Stream destinationStream, object data)
+        {
+            sourceStream.CopyTo(destinationStream);
+            destinationStream.Seek(0, SeekOrigin.Begin);
+            using (var zipFile = new ZipFile(destinationStream))
+            {
+                ProcessZip(data, zipFile);
+            }
+        }
         private static void ProcessZip(object data, ZipFile zipFile)
         {
             zipFile.BeginUpdate();
@@ -107,5 +118,6 @@ namespace swxben.docxtemplateengine
         {
             return document.Replace(TOKEN_START + fieldName + TOKEN_END, fieldValue);
         }
+
     }
 }
