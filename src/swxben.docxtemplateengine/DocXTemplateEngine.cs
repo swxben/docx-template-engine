@@ -118,6 +118,5 @@ namespace swxben.docxtemplateengine
         {
             return document.Replace(TOKEN_START + fieldName + TOKEN_END, fieldValue);
         }
-
     }
 }
