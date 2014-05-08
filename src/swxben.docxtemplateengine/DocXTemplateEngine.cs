@@ -7,12 +7,6 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace swxben.docxtemplateengine
 {
-    public interface IDocXTemplateEngine
-    {
-        void Process(string source, string destination, object data);
-        void Process(string source, Stream destination, object data);
-    }
-
     public class DocXTemplateEngine : IDocXTemplateEngine
     {
         const string DOCUMENT_XML_PATH = @"word/document.xml";
@@ -42,16 +36,19 @@ namespace swxben.docxtemplateengine
             }
         }
 
-
         public void Process(Stream sourceStream, Stream destinationStream, object data)
         {
             sourceStream.CopyTo(destinationStream);
             destinationStream.Seek(0, SeekOrigin.Begin);
+            
             using (var zipFile = new ZipFile(destinationStream))
             {
                 ProcessZip(data, zipFile);
             }
+
+
         }
+
         private static void ProcessZip(object data, ZipFile zipFile)
         {
             zipFile.BeginUpdate();
