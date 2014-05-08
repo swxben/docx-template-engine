@@ -114,35 +114,5 @@ namespace Tests
 
             result.ShouldBe("Name: Maxi, Age: 25");
         }
-
-
-        private static string RootDir()
-        {
-            var currentDirectory = Directory.GetCurrentDirectory();
-            var rootDir = currentDirectory.Substring(0, currentDirectory.IndexOf(@"\src\Tests\bin\", StringComparison.Ordinal));
-            return rootDir;
-        }
-
-        [Test]
-        public void test_file_is_in_root_directory()
-        {
-            var ex = File.Exists(RootDir() + @"\template1.docx");
-            Assert.IsTrue(ex);
-        }
-
-        [Test]
-        public void test_stream_src_and_dest()
-        {
-            //ARRANGE
-            var file = RootDir() + @"\template1.docx";
-            var templateEngine = new DocXTemplateEngine();
-            var dstStream = new MemoryStream();
-            //ACT
-            templateEngine.Process(File.OpenRead(file), dstStream, new { Name = "Bar" });
-            dstStream.Close(); 
-            //ASSERT
-            Assert.IsTrue(true);  // Simply asserts that an exception hasnt been thrown.
-        }
-
     }
 }

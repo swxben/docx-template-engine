@@ -50,7 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelpers.cs" />
     <Compile Include="when_parsing_simple_template.cs" />
+    <Compile Include="when_reading_to_and_from_a_stream.cs" />
     <Compile Include="when_replacing_template_field.cs" />
   </ItemGroup>
   <ItemGroup>
