@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
@@ -9,7 +10,7 @@ namespace swxben.docxtemplateengine
 {
     public class DocXTemplateEngine : IDocXTemplateEngine
     {
-        const string DOCUMENT_XML_PATH = @"word/document.xml";
+        const string DocumentXmlPath = @"word/document.xml";
         public const string TOKEN_START = "«";
         public const string TOKEN_END = "»";
 
@@ -45,8 +46,6 @@ namespace swxben.docxtemplateengine
             {
                 ProcessZip(data, zipFile);
             }
-
-
         }
 
         private static void ProcessZip(object data, ZipFile zipFile)
@@ -54,10 +53,10 @@ namespace swxben.docxtemplateengine
             zipFile.BeginUpdate();
 
             var document = "";
-            var entry = zipFile.GetEntry(DOCUMENT_XML_PATH);
+            var entry = zipFile.GetEntry(DocumentXmlPath);
             if (entry == null)
             {
-                throw new Exception(string.Format("Can't find {0} in template zip", DOCUMENT_XML_PATH));
+                throw new Exception(string.Format("Can't find {0} in template zip", DocumentXmlPath));
             }
 
             using (var s = zipFile.GetInputStream(entry))
@@ -68,15 +67,15 @@ namespace swxben.docxtemplateengine
 
             var newDocument = ParseTemplate(document, data);
 
-            zipFile.Add(new StringStaticDataSource(newDocument), DOCUMENT_XML_PATH, CompressionMethod.Deflated, true);
+            zipFile.Add(new StringStaticDataSource(newDocument), DocumentXmlPath, CompressionMethod.Deflated, true);
 
             zipFile.CommitUpdate();
 
         }
 
-        public class StringStaticDataSource : IStaticDataSource
+        class StringStaticDataSource : IStaticDataSource
         {
-            string _source;
+            readonly string _source;
 
             public StringStaticDataSource(string source)
             {
@@ -91,20 +90,18 @@ namespace swxben.docxtemplateengine
 
         public static string ParseTemplate(string document, object data)
         {
-            foreach (var field in data.GetType().GetFields())
+            document = data.GetType().GetFields().Aggregate(document, 
+                (current, field) => ReplaceTemplateField(current, field.Name, field.GetValue(data).ToString()));
+            document = data.GetType().GetProperties().Aggregate(document, 
+                (current, property) => ReplaceTemplateField(current, property.Name, property.GetValue(data, null).ToString()));
+            
+            var dictionary = data as IDictionary<string, object>;
+
+            if (dictionary != null)
             {
-                document = ReplaceTemplateField(document, field.Name, field.GetValue(data).ToString());
-            }
-            foreach (var property in data.GetType().GetProperties())
-            {
-                document = ReplaceTemplateField(document, property.Name, property.GetValue(data, null).ToString());
-            }
-            if (data is IDictionary<string, object>)
-            {
-                var dict = (IDictionary<string, object>)data;
-                foreach (var key in dict.Keys)
+                foreach (var key in dictionary.Keys)
                 {
-                    document = ReplaceTemplateField(document, key, dict[key].ToString());
+                    document = ReplaceTemplateField(document, key, dictionary[key].ToString());
                 }
             }
 
