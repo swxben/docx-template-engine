@@ -1,5 +1,5 @@
 @echo off
-call "%VS100COMNTOOLS%vsvars32.bat"
+call "%VS110COMNTOOLS%vsvars32.bat"
 mkdir log\
 mkdir lib\net40\
 
