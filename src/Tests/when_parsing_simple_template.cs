@@ -101,7 +101,29 @@ namespace Tests
 
             result.ShouldBe("Name: Bob, Age: 26");
         }
+        [Test]
+        public void typed_property_object_is_used_with_null_property()
+        {
+            var template = "Name: " + DocXTemplateEngine.TOKEN_START + "Name" + DocXTemplateEngine.TOKEN_END + ", Age: " + DocXTemplateEngine.TOKEN_START + "Age" + DocXTemplateEngine.TOKEN_END;
+            var data = JsonConvert.DeserializeObject<PersonWithProperties>("{ Name: 'Bob', Age: 26 }");
+            data.Name = null;
 
+            var result = DocXTemplateEngine.ParseTemplate(template, data);
+
+            result.ShouldBe("Name: , Age: 26");
+        }
+
+        [Test]
+        public void typed_field_object_is_used_with_null_field()
+        {
+            var template = "Name: " + DocXTemplateEngine.TOKEN_START + "Name" + DocXTemplateEngine.TOKEN_END + ", Age: " + DocXTemplateEngine.TOKEN_START + "Age" + DocXTemplateEngine.TOKEN_END;
+            var data = JsonConvert.DeserializeObject<PersonWithFields>("{ Name: 'Bob', Age: 26 }");
+            data.Name = null;
+
+            var result = DocXTemplateEngine.ParseTemplate(template, data);
+
+            result.ShouldBe("Name: , Age: 26");
+        }
         [Test]
         public void dynamic_object_is_used()
         {
@@ -113,6 +135,19 @@ namespace Tests
             var result = (string)DocXTemplateEngine.ParseTemplate(template, data);
 
             result.ShouldBe("Name: Maxi, Age: 25");
+        }
+
+        [Test]
+        public void dynamic_object_is_used_with_null_item()
+        {
+            var template = "Name: " + DocXTemplateEngine.TOKEN_START + "Name" + DocXTemplateEngine.TOKEN_END + ", Age: " + DocXTemplateEngine.TOKEN_START + "Age" + DocXTemplateEngine.TOKEN_END;
+            dynamic data = new ExpandoObject();
+            data.Name = "Maxi";
+            data.Age = null;
+
+            var result = (string)DocXTemplateEngine.ParseTemplate(template, data);
+
+            result.ShouldBe("Name: Maxi, Age: ");
         }
     }
 }
