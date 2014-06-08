@@ -149,5 +149,17 @@ namespace Tests
 
             result.ShouldBe("Name: Maxi, Age: ");
         }
+
+        [Test]
+        public void property_not_found_is_not_replaced()
+        {
+            var template = "Name: " + DocXTemplateEngine.TOKEN_START + "Name" + DocXTemplateEngine.TOKEN_END + ", Age: " + DocXTemplateEngine.TOKEN_START + "Age" + DocXTemplateEngine.TOKEN_END;
+            dynamic data = new ExpandoObject();
+            data.Name = "Sam";
+
+            var result = (string)DocXTemplateEngine.ParseTemplate(template, data);
+
+            result.ShouldBe(string.Format("Name: Sam, Age: {0}Age{1}", DocXTemplateEngine.TOKEN_START, DocXTemplateEngine.TOKEN_END));
+        }
     }
 }

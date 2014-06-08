@@ -13,7 +13,7 @@ Install the engine via [NuGet](http://nuget.org/packages/swxben.docxtemplateengi
 
 In `template.docx` - use a field (Insert / Quick Parts / Field), _Field type_ is `MergeField` and enter the field or property name in _Field_:
 
-	Brought to you by <<Name>>!
+	Brought to you by «Name»!
 
 In code:
 
@@ -35,6 +35,11 @@ A very simple use case is given in the `docxtemplateenginetest` project, which i
 an output filename, and a JSON string. Eg:
 
 	docxtemplateenginetest.exe template.docx output.docx "{ Name: 'Ben', Website: 'swxben.com' }"
+
+
+## Null handling and not found properties
+
+If the data contains a null value for a given property, the template field will be replaced with an empty value (""). If the data doesn't contain a template field, the field won't be replaced at all.
 
 
 ## Limitations
