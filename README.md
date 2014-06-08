@@ -13,7 +13,7 @@ Install the engine via [NuGet](http://nuget.org/packages/swxben.docxtemplateengi
 
 In `template.docx` - use a field (Insert / Quick Parts / Field), _Field type_ is `MergeField` and enter the field or property name in _Field_:
 
-	Brought to you by <<Name>>!
+	Brought to you by «Name»!
 
 In code:
 
@@ -37,6 +37,11 @@ an output filename, and a JSON string. Eg:
 	docxtemplateenginetest.exe template.docx output.docx "{ Name: 'Ben', Website: 'swxben.com' }"
 
 
+## Null handling and not found properties
+
+If the data contains a null value for a given property, the template field will be replaced with an empty value (""). If the data doesn't contain a template field, the field won't be replaced at all.
+
+
 ## Limitations
 
 The templating language in the first milestone is a simple search and replace using the value `.ToString()`. No escaping of the 
@@ -45,6 +50,10 @@ the template string such as an errant bold character like {{th**i**s}}. There ar
 
 
 ## Versions
+
+### 0.1.5
+
+- Safe handling of null values in the source data ([@MarkKGreenway](https://github.com/MarkKGreenway))
 
 ### 0.1.4
 
@@ -101,6 +110,6 @@ Third party libraries or resources have been included in this project under thei
 
 ## Contributors & Maintainers
 
-- [@bendetat]() (contributor)
+- [@bendetat]() (maintainer)
 - [@deltasem](https://github.com/deltasem)
 - [@MarkKGreenway](https://github.com/MarkKGreenway)
