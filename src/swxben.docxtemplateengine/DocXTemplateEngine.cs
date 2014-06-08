@@ -91,26 +91,23 @@ namespace swxben.docxtemplateengine
         public static string ParseTemplate(string document, object data)
         {
             document = data.GetType().GetFields().Aggregate(document, 
-                (current, field) => ReplaceTemplateField(current, field.Name, field.GetValue(data).ToString()));
+                (current, field) => ReplaceTemplateField(current, field.Name, field.GetValue(data)));
             document = data.GetType().GetProperties().Aggregate(document, 
-                (current, property) => ReplaceTemplateField(current, property.Name, property.GetValue(data, null).ToString()));
+                (current, property) => ReplaceTemplateField(current, property.Name, property.GetValue(data, null)));
             
             var dictionary = data as IDictionary<string, object>;
 
             if (dictionary != null)
             {
-                foreach (var key in dictionary.Keys)
-                {
-                    document = ReplaceTemplateField(document, key, dictionary[key].ToString());
-                }
+                document = dictionary.Keys.Aggregate(document, (current, key) => ReplaceTemplateField(current, key, dictionary[key]));
             }
 
             return document;
         }
 
-        public static string ReplaceTemplateField(string document, string fieldName, string fieldValue)
+        public static string ReplaceTemplateField(string document, string fieldName, object fieldValue)
         {
-            return document.Replace(TOKEN_START + fieldName + TOKEN_END, fieldValue);
+            return document.Replace(TOKEN_START + fieldName + TOKEN_END, fieldValue == null ? string.Empty : fieldValue.ToString());
         }
     }
 }
