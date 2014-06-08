@@ -51,6 +51,10 @@ the template string such as an errant bold character like {{th**i**s}}. There ar
 
 ## Versions
 
+### 0.1.5
+
+- Safe handling of null values in the source data ([@MarkKGreenway](https://github.com/MarkKGreenway))
+
 ### 0.1.4
 
 - Read from stream ([@MarkKGreenway](https://github.com/MarkKGreenway))
@@ -106,6 +110,6 @@ Third party libraries or resources have been included in this project under thei
 
 ## Contributors & Maintainers
 
-- [@bendetat]() (contributor)
+- [@bendetat]() (maintainer)
 - [@deltasem](https://github.com/deltasem)
 - [@MarkKGreenway](https://github.com/MarkKGreenway)
