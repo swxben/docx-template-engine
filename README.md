@@ -50,6 +50,20 @@ the template string such as an errant bold character like {{th**i**s}}. There ar
 
 
 ## Versions
+### 0.1.6
+
+- Allows for Auto escaping of all fields through the use of a flag.
+
+In code:
+
+	var templateEngine = new swxben.docxtemplateengine.DocXTemplateEngine();
+	templateEngine.Process(
+		source = "template.docx",
+		destination = "dest.docx",
+		data = new {
+			Name = "SWXBEN"
+		},
+        DocxXmlHandling.AutoEscape);
 
 ### 0.1.5
 

@@ -161,5 +161,20 @@ namespace Tests
 
             result.ShouldBe(string.Format("Name: Sam, Age: {0}Age{1}", DocXTemplateEngine.TOKEN_START, DocXTemplateEngine.TOKEN_END));
         }
+
+        [Test]
+        public void xml_object_properties_are_replaced()
+        {
+            var template = "Name: " + DocXTemplateEngine.TOKEN_START + "Name" + DocXTemplateEngine.TOKEN_END + ", Age: " + DocXTemplateEngine.TOKEN_START + "Age" + DocXTemplateEngine.TOKEN_END;
+            var data = new
+            {
+                Name = "<node>it's my \"node\" & i like it<node>",
+                Age = 32
+            };
+
+            var result = DocXTemplateEngine.ParseTemplate(template, data, DocxXmlHandling.AutoEscape);
+
+            result.ShouldBe("Name: &lt;node&gt;it&apos;s my &quot;node&quot; &amp; i like it&lt;node&gt;, Age: 32");
+        }
     }
 }
