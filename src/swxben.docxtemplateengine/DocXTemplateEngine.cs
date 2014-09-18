@@ -13,8 +13,9 @@ namespace swxben.docxtemplateengine
         const string DocumentXmlPath = @"word/document.xml";
         public const string TOKEN_START = "«";
         public const string TOKEN_END = "»";
+        private DocxXmlHandling _docxXmlHandling;
 
-        public void Process(string source, Stream destination, object data)
+        public void Process(string source, Stream destination, object data, DocxXmlHandling docxXmlHandling = DocxXmlHandling.Ignore)
         {
             var sourceData = File.ReadAllBytes(source);
             destination.Write(sourceData, 0, sourceData.Length);
@@ -25,7 +26,7 @@ namespace swxben.docxtemplateengine
             }
         }
 
-        public void Process(string source, string destination, object data)
+        public void Process(string source, string destination, object data, DocxXmlHandling docxXmlHandling = DocxXmlHandling.Ignore)
         {
             if (File.Exists(destination)) File.Delete(destination);
 
@@ -37,7 +38,7 @@ namespace swxben.docxtemplateengine
             }
         }
 
-        public void Process(Stream sourceStream, Stream destinationStream, object data)
+        public void Process(Stream sourceStream, Stream destinationStream, object data, DocxXmlHandling docxXmlHandling = DocxXmlHandling.Ignore)
         {
             sourceStream.CopyTo(destinationStream);
             destinationStream.Seek(0, SeekOrigin.Begin);
@@ -48,7 +49,7 @@ namespace swxben.docxtemplateengine
             }
         }
 
-        private static void ProcessZip(object data, ZipFile zipFile)
+        private static void ProcessZip(object data, ZipFile zipFile, DocxXmlHandling docxXmlHandling = DocxXmlHandling.Ignore)
         {
             zipFile.BeginUpdate();
 
@@ -65,7 +66,7 @@ namespace swxben.docxtemplateengine
                 document = reader.ReadToEnd();
             }
 
-            var newDocument = ParseTemplate(document, data);
+            var newDocument = ParseTemplate(document, data, docxXmlHandling);
 
             zipFile.Add(new StringStaticDataSource(newDocument), DocumentXmlPath, CompressionMethod.Deflated, true);
 
@@ -88,26 +89,31 @@ namespace swxben.docxtemplateengine
             }
         }
 
-        public static string ParseTemplate(string document, object data)
+        public static string ParseTemplate(string document, object data, DocxXmlHandling docxXmlHandling = DocxXmlHandling.Ignore)
         {
-            document = data.GetType().GetFields().Aggregate(document, 
-                (current, field) => ReplaceTemplateField(current, field.Name, field.GetValue(data)));
+            document = data.GetType().GetFields().Aggregate(document,
+                (current, field) => ReplaceTemplateField(current, field.Name, field.GetValue(data), docxXmlHandling));
             document = data.GetType().GetProperties().Aggregate(document, 
-                (current, property) => ReplaceTemplateField(current, property.Name, property.GetValue(data, null)));
+                (current, property) => ReplaceTemplateField(current, property.Name, property.GetValue(data, null), docxXmlHandling));
             
             var dictionary = data as IDictionary<string, object>;
 
             if (dictionary != null)
             {
-                document = dictionary.Keys.Aggregate(document, (current, key) => ReplaceTemplateField(current, key, dictionary[key]));
+                document = dictionary.Keys.Aggregate(document, (current, key) => ReplaceTemplateField(current, key, dictionary[key], docxXmlHandling));
             }
 
             return document;
         }
 
-        public static string ReplaceTemplateField(string document, string fieldName, object fieldValue)
+        public static string ReplaceTemplateField(string document, string fieldName, object fieldValue, DocxXmlHandling docxXmlHandling = DocxXmlHandling.Ignore)
         {
-            return document.Replace(TOKEN_START + fieldName + TOKEN_END, fieldValue == null ? string.Empty : fieldValue.ToString());
+            var stringFieldValue = fieldValue == null ? string.Empty : fieldValue.ToString();
+            if (docxXmlHandling == DocxXmlHandling.AutoEscape)
+            {
+                return document.Replace(TOKEN_START + fieldName + TOKEN_END, System.Security.SecurityElement.Escape(stringFieldValue));
+            }
+            return document.Replace(TOKEN_START + fieldName + TOKEN_END, stringFieldValue);
         }
     }
 }
